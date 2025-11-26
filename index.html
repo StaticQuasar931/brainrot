@@ -5,108 +5,543 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Brainrot Games Index</title>
 <style>
+    :root {
+        --bg: #050509;
+        --bg-soft: #11111a;
+        --accent: #ff4fd8;
+        --accent-soft: rgba(255, 79, 216, 0.12);
+        --text-main: #ffffff;
+        --text-soft: #c5c5d8;
+        --border-soft: #26263a;
+        --chip-bg: #181824;
+        --chip-active: #ff4fd8;
+        --chip-active-text: #050509;
+        --card-hover: rgba(255, 255, 255, 0.06);
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
     body {
-        font-family: Arial, sans-serif;
-        background: #111;
-        color: #fff;
         margin: 0;
         padding: 20px;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background:
+            radial-gradient(circle at top, #291938 0, transparent 55%),
+            radial-gradient(circle at bottom, #09162b 0, transparent 55%),
+            var(--bg);
+        color: var(--text-main);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+    }
+
+    .page-wrap {
+        width: 100%;
+        max-width: 1200px;
+    }
+
+    header {
         text-align: center;
+        margin-bottom: 20px;
     }
+
     h1 {
-        margin-bottom: 10px;
-        font-size: 32px;
+        margin: 0 0 8px;
+        font-size: clamp(26px, 4vw, 32px);
+        letter-spacing: 0.04em;
     }
-    p {
-        margin-bottom: 25px;
-        font-size: 16px;
-        opacity: 0.8;
+
+    .subtitle {
+        margin: 0;
+        font-size: 14px;
+        color: var(--text-soft);
+        opacity: 0.9;
     }
-    .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 15px;
-        padding: 10px;
-        max-width: 1000px;
-        margin: 0 auto;
+
+    .panel {
+        background: rgba(8, 8, 20, 0.92);
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+        padding: 16px 16px 20px;
+        backdrop-filter: blur(12px);
     }
-    .btn {
-        background: #222;
-        border: 2px solid #444;
-        padding: 15px;
-        border-radius: 8px;
-        color: #fff;
+
+    .top-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+        margin-bottom: 14px;
+    }
+
+    .search-wrap {
+        position: relative;
+        flex: 1 1 220px;
+        min-width: 0;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 8px 12px 8px 30px;
+        border-radius: 10px;
+        border: 1px solid var(--border-soft);
+        background: var(--bg-soft);
+        color: var(--text-main);
+        font-size: 14px;
+        outline: none;
+        transition: border 0.15s, box-shadow 0.15s, background 0.15s;
+    }
+
+    .search-input::placeholder {
+        color: #6f6f88;
+    }
+
+    .search-input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 1px rgba(255, 79, 216, 0.3);
+        background: #151524;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 14px;
+        opacity: 0.7;
+    }
+
+    .filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .chip {
+        border-radius: 999px;
+        padding: 5px 11px;
+        font-size: 12px;
+        background: var(--chip-bg);
+        color: var(--text-soft);
+        border: 1px solid transparent;
         cursor: pointer;
-        font-size: 16px;
-        transition: 0.2s;
-        text-decoration: none;
-        display: block;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: background 0.15s, color 0.15s, border 0.15s, transform 0.1s;
+        user-select: none;
     }
-    .btn:hover {
-        background: #444;
-        border-color: #777;
+
+    .chip span.dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #6669ff;
+    }
+
+    .chip.brainrot span.dot {
+        background: #ffb347;
+    }
+
+    .chip.fix span.dot {
+        background: #7bff8c;
+    }
+
+    .chip.fake span.dot {
+        background: #ff6f91;
+    }
+
+    .chip.other span.dot {
+        background: #9ad3ff;
+    }
+
+    .chip.active {
+        background: var(--chip-active);
+        color: var(--chip-active-text);
+        border-color: rgba(0, 0, 0, 0.6);
+        transform: translateY(-1px);
+    }
+
+    .chip.active span.dot {
+        background: rgba(0, 0, 0, 0.6);
+    }
+
+    .games-grid {
+        margin-top: 12px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+        gap: 12px;
+    }
+
+    .game-card {
+        position: relative;
+        background: rgba(16, 16, 28, 0.96);
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 11px 12px 12px;
+        text-align: left;
+        cursor: pointer;
+        overflow: hidden;
+        transition:
+            background 0.15s,
+            border 0.15s,
+            transform 0.12s,
+            box-shadow 0.12s;
+    }
+
+    .game-card:hover {
+        background: var(--card-hover);
+        border-color: rgba(255, 255, 255, 0.14);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+    }
+
+    .game-main-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 6px;
+    }
+
+    .game-icon {
+        width: 26px;
+        height: 26px;
+        border-radius: 7px;
+        background: radial-gradient(circle at 30% 20%, #ffffff 0, #ffd1ff 16%, #8951ff 55%, #140925 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        color: #050509;
+        font-weight: 700;
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.45);
+        flex-shrink: 0;
+    }
+
+    .game-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-main);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .game-url {
+        font-size: 11px;
+        color: #8a8aa3;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        border-radius: 999px;
+        padding: 2px 8px;
+        font-size: 10px;
+        margin-top: 6px;
+        background: var(--accent-soft);
+        color: #ffc8ff;
+    }
+
+    .badge.brainrot {
+        background: rgba(255, 179, 71, 0.16);
+        color: #ffd99b;
+    }
+
+    .badge.fix {
+        background: rgba(123, 255, 140, 0.12);
+        color: #9cffaf;
+    }
+
+    .badge.fake {
+        background: rgba(255, 111, 145, 0.12);
+        color: #ffc2d4;
+    }
+
+    .badge.diddy {
+        background: rgba(154, 211, 255, 0.12);
+        color: #c5e5ff;
+    }
+
+    .badge.other {
+        background: rgba(255, 255, 255, 0.07);
+        color: #e0e0ff;
+    }
+
+    .badge-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: currentColor;
+        opacity: 0.9;
+    }
+
+    .open-label {
+        position: absolute;
+        right: 10px;
+        top: 9px;
+        font-size: 11px;
+        color: #aaaaff;
+        opacity: 0.85;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .open-label span.arrow {
+        font-size: 13px;
+        transform: translateY(1px);
+    }
+
+    .empty-msg {
+        margin-top: 18px;
+        text-align: center;
+        font-size: 13px;
+        color: #9b9bb5;
+    }
+
+    @media (max-width: 600px) {
+        body {
+            padding: 14px;
+        }
+        .panel {
+            padding: 13px 13px 17px;
+        }
+        .top-row {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .filters {
+            justify-content: flex-start;
+        }
     }
 </style>
 </head>
 <body>
+<div class="page-wrap">
+    <header>
+        <h1>Brainrot Games</h1>
+        <p class="subtitle">Simple launcher for all your brainrot games on this repo</p>
+    </header>
 
-<h1>Brainrot Games</h1>
-<p>Select a game to open it</p>
+    <div class="panel">
+        <div class="top-row">
+            <div class="search-wrap">
+                <span class="search-icon">🔍</span>
+                <input
+                    id="searchInput"
+                    class="search-input"
+                    type="text"
+                    placeholder="Search games for example telekinesis or car"
+                >
+            </div>
+            <div class="filters">
+                <button class="chip active" data-filter="all">
+                    <span class="dot"></span>
+                    All
+                </button>
+                <button class="chip brainrot" data-filter="brainrot">
+                    <span class="dot"></span>
+                    Brainrot pack
+                </button>
+                <button class="chip fix" data-filter="fix">
+                    <span class="dot"></span>
+                    Fix broken and add missing
+                </button>
+                <button class="chip fake" data-filter="fake">
+                    <span class="dot"></span>
+                    Fake compression
+                </button>
+                <button class="chip other" data-filter="other">
+                    <span class="dot"></span>
+                    Other
+                </button>
+            </div>
+        </div>
 
-<div class="grid">
+        <div id="gamesGrid" class="games-grid">
+            <!-- cards are created by JS -->
+        </div>
 
-    <!-- AUTO GENERATED BUTTONS -->
-    <a class="btn" href="2048-merge-run/">2048 merge run</a>
-    <a class="btn" href="build-a-big-army/">build a big army</a>
-    <a class="btn" href="build-a-plane/">build a plane</a>
-    <a class="btn" href="camouflage-and-sniper/">camouflage and sniper</a>
-    <a class="btn" href="car-survival-3d/">car survival 3d</a>
-    <a class="btn" href="city-defense/">city defense</a>
-    <a class="btn" href="clothing-shop-3d/">clothing shop 3d</a>
-    <a class="btn" href="cool-cars-run-3d/">cool cars run 3d</a>
-    <a class="btn" href="crush-cars-3d/">crush cars 3d</a>
-    <a class="btn" href="destiny-run-3d/">destiny run 3d</a>
-    <a class="btn" href="destroy-the-car-3d/">destroy the car 3d</a>
-    <a class="btn" href="diamond-seeker/">diamond seeker</a>
-    <a class="btn" href="draw-joust/">draw joust</a>
-    <a class="btn" href="evolving-bombs-3d/">evolving bombs 3d</a>
-    <a class="btn" href="fire-and-frost-master/">fire and frost master</a>
-    <a class="btn" href="fitness-empire/">fitness empire</a>
-    <a class="btn" href="flick-goal/">flick goal</a>
-    <a class="btn" href="flip-master/">flip master</a>
-    <a class="btn" href="giant-wanted/">giant wanted</a>
-    <a class="btn" href="gun-clone/">gun clone</a>
-    <a class="btn" href="gun-runner/">gun runner</a>
-    <a class="btn" href="high-heels/">high heels</a>
-    <a class="btn" href="kaji-run/">kaji run</a>
-    <a class="btn" href="make-a-superboat/">make a superboat</a>
-    <a class="btn" href="makeover-run/">makeover run</a>
-    <a class="btn" href="mega-car-jumps/">mega car jumps</a>
-    <a class="btn" href="money-rush/">money rush</a>
-    <a class="btn" href="monster-box-3d/">monster box 3d</a>
-    <a class="btn" href="office-fight/">office fight</a>
-    <a class="btn" href="robot-invasion/">robot invasion</a>
-    <a class="btn" href="run-rich-3d/">run rich 3d</a>
-    <a class="btn" href="save-p-diddy-from-prison/">save p diddy from prison</a>
-    <a class="btn" href="seat-jam-3d/">seat jam 3d</a>
-    <a class="btn" href="shooting-master/">shooting master</a>
-    <a class="btn" href="supermarket-3d/">supermarket 3d</a>
-    <a class="btn" href="survive-to-victory/">survive to victory</a>
-    <a class="btn" href="telekinesis-attack/">telekinesis attack</a>
-    <a class="btn" href="telekinesis-car/">telekinesis car</a>
-    <a class="btn" href="telekinesis-drive/">telekinesis drive</a>
-    <a class="btn" href="telekinesis/">telekinesis</a>
-    <a class="btn" href="triple-match-3d/">triple match 3d</a>
-    <a class="btn" href="tug-of-war-with-cars/">tug of war with cars</a>
-    <a class="btn" href="twerk-race-3d/">twerk race 3d</a>
-    <a class="btn" href="twisted-rope-3d/">twisted rope 3d</a>
-    <a class="btn" href="wall-crawler/">wall crawler</a>
-    <a class="btn" href="war-regions/">war regions</a>
-    <a class="btn" href="weapon-craft-run/">weapon craft run</a>
-    <a class="btn" href="weapon-upgrade-rush/">weapon upgrade rush</a>
-    <a class="btn" href="wheel-scale/">wheel scale</a>
-
+        <div id="emptyMsg" class="empty-msg" style="display:none;">
+            No games match your search or filter
+        </div>
+    </div>
 </div>
 
+<script>
+    const baseUrl = "https://staticquasar931.github.io/brainrot/";
+
+    const games = [
+        { slug: "2048-merge-run",           name: "2048 merge run",              status: "fix" },
+        { slug: "build-a-big-army",         name: "build a big army",            status: "fix" },
+        { slug: "build-a-plane",            name: "build a plane",               status: "brainrot" },
+        { slug: "camouflage-and-sniper",    name: "camouflage and sniper",       status: "brainrot" },
+        { slug: "car-survival-3d",          name: "car survival 3d",             status: "brainrot" },
+        { slug: "city-defense",             name: "city defense",                status: "brainrot" },
+        { slug: "clothing-shop-3d",         name: "clothing shop 3d",            status: "fix" },
+        { slug: "cool-cars-run-3d",         name: "cool cars run 3d",            status: "fake" },
+        { slug: "crush-cars-3d",            name: "crush cars 3d",               status: "brainrot" },
+        { slug: "destiny-run-3d",           name: "destiny run 3d",              status: "brainrot" },
+        { slug: "destroy-the-car-3d",       name: "destroy the car 3d",          status: "fix" },
+        { slug: "diamond-seeker",           name: "diamond seeker",              status: "fake" },
+        { slug: "draw-joust",               name: "draw joust",                  status: "fix" },
+        { slug: "evolving-bombs-3d",        name: "evolving bombs 3d",           status: "fix" },
+        { slug: "fire-and-frost-master",    name: "fire and frost master",       status: "fix" },
+        { slug: "fitness-empire",           name: "fitness empire",              status: "fix" },
+        { slug: "flick-goal",               name: "flick goal",                  status: "fake" },
+        { slug: "flip-master",              name: "flip master",                 status: "fake" },
+        { slug: "giant-wanted",             name: "giant wanted",                status: "fake" },
+        { slug: "gun-clone",                name: "gun clone",                   status: "fake" },
+        { slug: "gun-runner",               name: "gun runner",                  status: "fix" },
+        { slug: "high-heels",               name: "high heels",                  status: "fix" },
+        { slug: "kaji-run",                 name: "kaji run",                    status: "fix" },
+        { slug: "make-a-superboat",         name: "make a superboat",            status: "brainrot" },
+        { slug: "makeover-run",             name: "makeover run",                status: "fake" },
+        { slug: "mega-car-jumps",           name: "mega car jumps",              status: "brainrot" },
+        { slug: "money-rush",               name: "money rush",                  status: "fix" },
+        { slug: "monster-box-3d",           name: "monster box 3d",              status: "fix" },
+        { slug: "office-fight",             name: "office fight",                status: "fix" },
+        { slug: "robot-invasion",           name: "robot invasion",              status: "fake" },
+        { slug: "run-rich-3d",              name: "run rich 3d",                 status: "fix" },
+        { slug: "save-p-diddy-from-prison", name: "save p diddy from prison",    status: "diddy" },
+        { slug: "seat-jam-3d",              name: "seat jam 3d",                 status: "fake" },
+        { slug: "shooting-master",          name: "shooting master",             status: "brainrot" },
+        { slug: "supermarket-3d",           name: "supermarket 3d",              status: "fix" },
+        { slug: "survive-to-victory",       name: "survive to victory",          status: "fix" },
+        { slug: "telekinesis-attack",       name: "telekinesis attack",          status: "brainrot" },
+        { slug: "telekinesis-car",          name: "telekinesis car",             status: "brainrot" },
+        { slug: "telekinesis-drive",        name: "telekinesis drive",           status: "brainrot" },
+        { slug: "telekinesis",              name: "telekinesis",                 status: "fix" },
+        { slug: "triple-match-3d",          name: "triple match 3d",             status: "brainrot" },
+        { slug: "tug-of-war-with-cars",     name: "tug of war with cars",        status: "brainrot" },
+        { slug: "twerk-race-3d",            name: "twerk race 3d",               status: "fake" },
+        { slug: "twisted-rope-3d",          name: "twisted rope 3d",             status: "fix" },
+        { slug: "wall-crawler",             name: "wall crawler",                status: "fix" },
+        { slug: "war-regions",              name: "war regions",                 status: "fake" },
+        { slug: "weapon-craft-run",         name: "weapon craft run",            status: "fake" },
+        { slug: "weapon-upgrade-rush",      name: "weapon upgrade rush",         status: "fix" },
+        { slug: "wheel-scale",              name: "wheel scale",                 status: "other" }
+    ];
+
+    const statusLabel = {
+        brainrot: "shit ton of brainrot games",
+        fix: "fix broken and add missing",
+        fake: "fake compression files",
+        diddy: "save p diddy",
+        other: "other"
+    };
+
+    const statusBadgeClass = {
+        brainrot: "badge brainrot",
+        fix: "badge fix",
+        fake: "badge fake",
+        diddy: "badge diddy",
+        other: "badge other"
+    };
+
+    const gamesGrid = document.getElementById("gamesGrid");
+    const emptyMsg = document.getElementById("emptyMsg");
+    const searchInput = document.getElementById("searchInput");
+    const chips = Array.from(document.querySelectorAll(".chip"));
+    let activeFilter = "all";
+
+    function getInitials(name) {
+        const words = name.split(" ").filter(Boolean);
+        if (words.length === 1) {
+            return words[0].slice(0, 2).toUpperCase();
+        }
+        return (words[0][0] + words[1][0]).toUpperCase();
+    }
+
+    function createCard(game) {
+        const url = baseUrl + game.slug + "/";
+        const card = document.createElement("div");
+        card.className = "game-card";
+        card.dataset.slug = game.slug;
+        card.dataset.name = game.name.toLowerCase();
+        card.dataset.status = game.status;
+
+        card.innerHTML = `
+            <div class="game-main-row">
+                <div class="game-icon">${getInitials(game.name)}</div>
+                <div style="min-width:0;">
+                    <div class="game-title" title="${game.name}">${game.name}</div>
+                    <div class="game-url" title="${url}">${game.slug}/</div>
+                </div>
+                <div class="open-label">
+                    <span>Open</span>
+                    <span class="arrow">↗</span>
+                </div>
+            </div>
+            <div class="${statusBadgeClass[game.status]}">
+                <span class="badge-dot"></span>
+                <span>${statusLabel[game.status] || "other"}</span>
+            </div>
+        `;
+
+        card.addEventListener("click", () => {
+            window.location.href = url;
+        });
+
+        return card;
+    }
+
+    function renderCards() {
+        gamesGrid.innerHTML = "";
+        games.forEach(game => {
+            const card = createCard(game);
+            gamesGrid.appendChild(card);
+        });
+    }
+
+    function applyFilters() {
+        const query = searchInput.value.trim().toLowerCase();
+        const cards = Array.from(document.querySelectorAll(".game-card"));
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+            const name = card.dataset.name;
+            const slug = card.dataset.slug;
+            const status = card.dataset.status;
+
+            const matchSearch = !query || name.includes(query) || slug.includes(query);
+            const matchFilter = activeFilter === "all" || status === activeFilter;
+
+            const visible = matchSearch && matchFilter;
+            card.style.display = visible ? "" : "none";
+            if (visible) visibleCount++;
+        });
+
+        emptyMsg.style.display = visibleCount === 0 ? "block" : "none";
+    }
+
+    function setupFilters() {
+        chips.forEach(chip => {
+            chip.addEventListener("click", () => {
+                chips.forEach(c => c.classList.remove("active"));
+                chip.classList.add("active");
+                activeFilter = chip.dataset.filter;
+                applyFilters();
+            });
+        });
+    }
+
+    function setupSearch() {
+        searchInput.addEventListener("input", applyFilters);
+    }
+
+    renderCards();
+    setupFilters();
+    setupSearch();
+    applyFilters();
+</script>
 </body>
 </html>
