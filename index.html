@@ -6,17 +6,16 @@
 <title>Brainrot Games Index</title>
 <style>
     :root {
-        --bg: #050509;
-        --bg-soft: #11111a;
+        --bg: #050510;
+        --bg-alt: #101020;
         --accent: #ff4fd8;
-        --accent-soft: rgba(255, 79, 216, 0.12);
-        --text-main: #ffffff;
-        --text-soft: #c5c5d8;
-        --border-soft: #26263a;
-        --chip-bg: #181824;
-        --chip-active: #ff4fd8;
-        --chip-active-text: #050509;
-        --card-hover: rgba(255, 255, 255, 0.06);
+        --accent-soft: rgba(255, 79, 216, 0.18);
+        --text: #ffffff;
+        --text-soft: #c4c4dd;
+        --border: #2b2b44;
+        --btn-bg: #18182a;
+        --btn-hover-bg: #22223a;
+        --btn-border: #333355;
     }
 
     * {
@@ -28,28 +27,28 @@
         padding: 20px;
         font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         background:
-            radial-gradient(circle at top, #291938 0, transparent 55%),
-            radial-gradient(circle at bottom, #09162b 0, transparent 55%),
+            radial-gradient(circle at top, #26264a 0, transparent 55%),
+            radial-gradient(circle at bottom, #0a1c33 0, transparent 55%),
             var(--bg);
-        color: var(--text-main);
+        color: var(--text);
         min-height: 100vh;
         display: flex;
         justify-content: center;
     }
 
-    .page-wrap {
+    .page {
         width: 100%;
-        max-width: 1200px;
+        max-width: 1000px;
     }
 
     header {
         text-align: center;
-        margin-bottom: 20px;
+        margin-bottom: 18px;
     }
 
     h1 {
-        margin: 0 0 8px;
-        font-size: clamp(26px, 4vw, 32px);
+        margin: 0 0 6px;
+        font-size: clamp(24px, 4vw, 32px);
         letter-spacing: 0.04em;
     }
 
@@ -61,70 +60,71 @@
     }
 
     .panel {
-        background: rgba(8, 8, 20, 0.92);
+        background: rgba(9, 9, 24, 0.96);
         border-radius: 14px;
         border: 1px solid rgba(255, 255, 255, 0.04);
         box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
-        padding: 16px 16px 20px;
-        backdrop-filter: blur(12px);
+        padding: 16px 16px 18px;
+        backdrop-filter: blur(10px);
     }
 
     .top-row {
         display: flex;
         flex-wrap: wrap;
-        gap: 12px;
+        gap: 10px;
         align-items: center;
         margin-bottom: 14px;
     }
 
     .search-wrap {
         position: relative;
-        flex: 1 1 220px;
+        flex: 1 1 240px;
         min-width: 0;
     }
 
     .search-input {
         width: 100%;
-        padding: 8px 12px 8px 30px;
+        padding: 8px 12px;
+        padding-left: 28px;
         border-radius: 10px;
-        border: 1px solid var(--border-soft);
-        background: var(--bg-soft);
-        color: var(--text-main);
+        border: 1px solid var(--border);
+        background: #141426;
+        color: var(--text);
         font-size: 14px;
         outline: none;
         transition: border 0.15s, box-shadow 0.15s, background 0.15s;
     }
 
     .search-input::placeholder {
-        color: #6f6f88;
+        color: #75759a;
     }
 
     .search-input:focus {
         border-color: var(--accent);
-        box-shadow: 0 0 0 1px rgba(255, 79, 216, 0.3);
-        background: #151524;
+        box-shadow: 0 0 0 1px var(--accent-soft);
+        background: #18182c;
     }
 
     .search-icon {
         position: absolute;
-        left: 10px;
+        left: 9px;
         top: 50%;
         transform: translateY(-50%);
-        font-size: 14px;
-        opacity: 0.7;
+        font-size: 12px;
+        opacity: 0.75;
     }
 
     .filters {
         display: flex;
         flex-wrap: wrap;
-        gap: 8px;
+        gap: 6px;
     }
 
     .chip {
         border-radius: 999px;
-        padding: 5px 11px;
-        font-size: 12px;
-        background: var(--chip-bg);
+        padding: 4px 9px;
+        font-size: 11px;
+        background: #17172a;
         color: var(--text-soft);
         border: 1px solid transparent;
         cursor: pointer;
@@ -133,186 +133,108 @@
         gap: 6px;
         transition: background 0.15s, color 0.15s, border 0.15s, transform 0.1s;
         user-select: none;
+        white-space: nowrap;
     }
 
-    .chip span.dot {
+    .chip-dot {
         width: 7px;
         height: 7px;
         border-radius: 50%;
-        background: #6669ff;
+        background: #6f6fff;
     }
 
-    .chip.brainrot span.dot {
-        background: #ffb347;
-    }
-
-    .chip.fix span.dot {
-        background: #7bff8c;
-    }
-
-    .chip.fake span.dot {
-        background: #ff6f91;
-    }
-
-    .chip.other span.dot {
-        background: #9ad3ff;
-    }
+    .chip.brainrot .chip-dot { background: #ffb347; }
+    .chip.fix .chip-dot      { background: #7bff8c; }
+    .chip.fake .chip-dot     { background: #ff6f91; }
+    .chip.other .chip-dot    { background: #9ad3ff; }
 
     .chip.active {
-        background: var(--chip-active);
-        color: var(--chip-active-text);
-        border-color: rgba(0, 0, 0, 0.6);
+        background: var(--accent-soft);
+        color: var(--text);
+        border-color: var(--accent);
         transform: translateY(-1px);
     }
 
-    .chip.active span.dot {
-        background: rgba(0, 0, 0, 0.6);
-    }
-
     .games-grid {
-        margin-top: 12px;
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-        gap: 12px;
-    }
-
-    .game-card {
-        position: relative;
-        background: rgba(16, 16, 28, 0.96);
-        border-radius: 10px;
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        padding: 11px 12px 12px;
-        text-align: left;
-        cursor: pointer;
-        overflow: hidden;
-        transition:
-            background 0.15s,
-            border 0.15s,
-            transform 0.12s,
-            box-shadow 0.12s;
-    }
-
-    .game-card:hover {
-        background: var(--card-hover);
-        border-color: rgba(255, 255, 255, 0.14);
-        transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
-    }
-
-    .game-main-row {
-        display: flex;
-        align-items: center;
         gap: 10px;
-        margin-bottom: 6px;
+        margin-top: 8px;
     }
 
-    .game-icon {
-        width: 26px;
-        height: 26px;
-        border-radius: 7px;
-        background: radial-gradient(circle at 30% 20%, #ffffff 0, #ffd1ff 16%, #8951ff 55%, #140925 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    .btn {
+        display: block;
+        width: 100%;
+        text-align: left;
+        text-decoration: none;
+        background: var(--btn-bg);
+        border: 1px solid var(--btn-border);
+        border-radius: 10px;
+        padding: 10px 12px 9px;
+        color: var(--text);
         font-size: 14px;
-        color: #050509;
-        font-weight: 700;
-        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.45);
-        flex-shrink: 0;
+        cursor: pointer;
+        transition:
+            background 0.14s,
+            border 0.14s,
+            box-shadow 0.14s,
+            transform 0.12s;
     }
 
-    .game-title {
-        font-size: 14px;
+    .btn:hover {
+        background: var(--btn-hover-bg);
+        border-color: var(--accent);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+        transform: translateY(-2px);
+    }
+
+    .btn-title {
+        display: block;
         font-weight: 600;
-        color: var(--text-main);
+        margin-bottom: 3px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
     }
 
-    .game-url {
+    .btn-sub {
+        display: block;
         font-size: 11px;
-        color: #8a8aa3;
+        color: var(--text-soft);
+        margin-bottom: 3px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
     }
 
-    .badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        border-radius: 999px;
-        padding: 2px 8px;
+    .btn-tag {
+        display: inline-block;
         font-size: 10px;
-        margin-top: 6px;
-        background: var(--accent-soft);
-        color: #ffc8ff;
+        padding: 2px 7px;
+        border-radius: 999px;
+        background: #222238;
+        color: #d0d0ff;
     }
 
-    .badge.brainrot {
-        background: rgba(255, 179, 71, 0.16);
-        color: #ffd99b;
-    }
+    .btn-tag.brainrot { background: rgba(255, 179, 71, 0.16); color: #ffd99b; }
+    .btn-tag.fix      { background: rgba(123, 255, 140, 0.16); color: #a6ffba; }
+    .btn-tag.fake     { background: rgba(255, 111, 145, 0.16); color: #ffc2d4; }
+    .btn-tag.other    { background: rgba(154, 211, 255, 0.16); color: #cce6ff; }
 
-    .badge.fix {
-        background: rgba(123, 255, 140, 0.12);
-        color: #9cffaf;
-    }
-
-    .badge.fake {
-        background: rgba(255, 111, 145, 0.12);
-        color: #ffc2d4;
-    }
-
-    .badge.diddy {
-        background: rgba(154, 211, 255, 0.12);
-        color: #c5e5ff;
-    }
-
-    .badge.other {
-        background: rgba(255, 255, 255, 0.07);
-        color: #e0e0ff;
-    }
-
-    .badge-dot {
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        background: currentColor;
-        opacity: 0.9;
-    }
-
-    .open-label {
-        position: absolute;
-        right: 10px;
-        top: 9px;
-        font-size: 11px;
-        color: #aaaaff;
-        opacity: 0.85;
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-    }
-
-    .open-label span.arrow {
-        font-size: 13px;
-        transform: translateY(1px);
-    }
-
-    .empty-msg {
-        margin-top: 18px;
+    .empty {
+        margin-top: 14px;
         text-align: center;
         font-size: 13px;
-        color: #9b9bb5;
+        color: var(--text-soft);
+        display: none;
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 650px) {
         body {
             padding: 14px;
         }
         .panel {
-            padding: 13px 13px 17px;
+            padding: 13px 13px 16px;
         }
         .top-row {
             flex-direction: column;
@@ -325,10 +247,10 @@
 </style>
 </head>
 <body>
-<div class="page-wrap">
+<div class="page">
     <header>
         <h1>Brainrot Games</h1>
-        <p class="subtitle">Simple launcher for all your brainrot games on this repo</p>
+        <p class="subtitle">Quick launcher page for every game in this brainrot repo</p>
     </header>
 
     <div class="panel">
@@ -339,45 +261,45 @@
                     id="searchInput"
                     class="search-input"
                     type="text"
-                    placeholder="Search games for example telekinesis or car"
+                    placeholder="Search games for example car or telekinesis"
                 >
             </div>
             <div class="filters">
                 <button class="chip active" data-filter="all">
-                    <span class="dot"></span>
+                    <span class="chip-dot"></span>
                     All
                 </button>
                 <button class="chip brainrot" data-filter="brainrot">
-                    <span class="dot"></span>
+                    <span class="chip-dot"></span>
                     Brainrot pack
                 </button>
                 <button class="chip fix" data-filter="fix">
-                    <span class="dot"></span>
+                    <span class="chip-dot"></span>
                     Fix broken and add missing
                 </button>
                 <button class="chip fake" data-filter="fake">
-                    <span class="dot"></span>
+                    <span class="chip-dot"></span>
                     Fake compression
                 </button>
                 <button class="chip other" data-filter="other">
-                    <span class="dot"></span>
+                    <span class="chip-dot"></span>
                     Other
                 </button>
             </div>
         </div>
 
         <div id="gamesGrid" class="games-grid">
-            <!-- cards are created by JS -->
+            <!-- buttons will be inserted by JS -->
         </div>
 
-        <div id="emptyMsg" class="empty-msg" style="display:none;">
+        <div id="emptyMsg" class="empty">
             No games match your search or filter
         </div>
     </div>
 </div>
 
 <script>
-    const baseUrl = "https://staticquasar931.github.io/brainrot/";
+    const basePath = ""; // repo root, links like "2048-merge-run/"
 
     const games = [
         { slug: "2048-merge-run",           name: "2048 merge run",              status: "fix" },
@@ -411,7 +333,7 @@
         { slug: "office-fight",             name: "office fight",                status: "fix" },
         { slug: "robot-invasion",           name: "robot invasion",              status: "fake" },
         { slug: "run-rich-3d",              name: "run rich 3d",                 status: "fix" },
-        { slug: "save-p-diddy-from-prison", name: "save p diddy from prison",    status: "diddy" },
+        { slug: "save-p-diddy-from-prison", name: "save p diddy from prison",    status: "other" },
         { slug: "seat-jam-3d",              name: "seat jam 3d",                 status: "fake" },
         { slug: "shooting-master",          name: "shooting master",             status: "brainrot" },
         { slug: "supermarket-3d",           name: "supermarket 3d",              status: "fix" },
@@ -435,95 +357,84 @@
         brainrot: "shit ton of brainrot games",
         fix: "fix broken and add missing",
         fake: "fake compression files",
-        diddy: "save p diddy",
         other: "other"
     };
 
-    const statusBadgeClass = {
-        brainrot: "badge brainrot",
-        fix: "badge fix",
-        fake: "badge fake",
-        diddy: "badge diddy",
-        other: "badge other"
+    const statusTagClass = {
+        brainrot: "btn-tag brainrot",
+        fix: "btn-tag fix",
+        fake: "btn-tag fake",
+        other: "btn-tag other"
     };
 
-    const gamesGrid = document.getElementById("gamesGrid");
+    const grid = document.getElementById("gamesGrid");
     const emptyMsg = document.getElementById("emptyMsg");
     const searchInput = document.getElementById("searchInput");
     const chips = Array.from(document.querySelectorAll(".chip"));
+
     let activeFilter = "all";
 
-    function getInitials(name) {
-        const words = name.split(" ").filter(Boolean);
-        if (words.length === 1) {
-            return words[0].slice(0, 2).toUpperCase();
-        }
-        return (words[0][0] + words[1][0]).toUpperCase();
-    }
+    function createButton(game) {
+        const a = document.createElement("a");
+        a.className = "btn";
+        a.href = basePath + game.slug + "/";
 
-    function createCard(game) {
-        const url = baseUrl + game.slug + "/";
-        const card = document.createElement("div");
-        card.className = "game-card";
-        card.dataset.slug = game.slug;
-        card.dataset.name = game.name.toLowerCase();
-        card.dataset.status = game.status;
+        const label = statusLabel[game.status] || "other";
+        const tagClass = statusTagClass[game.status] || "btn-tag";
 
-        card.innerHTML = `
-            <div class="game-main-row">
-                <div class="game-icon">${getInitials(game.name)}</div>
-                <div style="min-width:0;">
-                    <div class="game-title" title="${game.name}">${game.name}</div>
-                    <div class="game-url" title="${url}">${game.slug}/</div>
-                </div>
-                <div class="open-label">
-                    <span>Open</span>
-                    <span class="arrow">↗</span>
-                </div>
-            </div>
-            <div class="${statusBadgeClass[game.status]}">
-                <span class="badge-dot"></span>
-                <span>${statusLabel[game.status] || "other"}</span>
-            </div>
+        a.innerHTML = `
+            <span class="btn-title">${game.name}</span>
+            <span class="btn-sub">${game.slug}/</span>
+            <span class="${tagClass}">${label}</span>
         `;
 
-        card.addEventListener("click", () => {
-            window.location.href = url;
-        });
+        a.dataset.name = game.name.toLowerCase();
+        a.dataset.slug = game.slug.toLowerCase();
+        a.dataset.status = game.status;
 
-        return card;
+        return a;
     }
 
-    function renderCards() {
-        gamesGrid.innerHTML = "";
+    function renderButtons() {
+        grid.innerHTML = "";
         games.forEach(game => {
-            const card = createCard(game);
-            gamesGrid.appendChild(card);
+            const btn = createButton(game);
+            grid.appendChild(btn);
         });
     }
 
     function applyFilters() {
         const query = searchInput.value.trim().toLowerCase();
-        const cards = Array.from(document.querySelectorAll(".game-card"));
-        let visibleCount = 0;
+        const buttons = Array.from(grid.querySelectorAll(".btn"));
+        let visible = 0;
 
-        cards.forEach(card => {
-            const name = card.dataset.name;
-            const slug = card.dataset.slug;
-            const status = card.dataset.status;
+        buttons.forEach(btn => {
+            const name = btn.dataset.name;
+            const slug = btn.dataset.slug;
+            const status = btn.dataset.status;
 
-            const matchSearch = !query || name.includes(query) || slug.includes(query);
-            const matchFilter = activeFilter === "all" || status === activeFilter;
+            const matchesSearch =
+                !query ||
+                name.includes(query) ||
+                slug.includes(query);
 
-            const visible = matchSearch && matchFilter;
-            card.style.display = visible ? "" : "none";
-            if (visible) visibleCount++;
+            const matchesFilter =
+                activeFilter === "all" ||
+                status === activeFilter;
+
+            const show = matchesSearch && matchesFilter;
+            btn.style.display = show ? "block" : "none";
+            if (show) visible++;
         });
 
-        emptyMsg.style.display = visibleCount === 0 ? "block" : "none";
+        emptyMsg.style.display = visible === 0 ? "block" : "none";
     }
 
-    function setupFilters() {
+    function setupSearch() {
+        searchInput.addEventListener("input", applyFilters);
+    }
+
+    function setupChips() {
         chips.forEach(chip => {
             chip.addEventListener("click", () => {
                 chips.forEach(c => c.classList.remove("active"));
@@ -534,13 +445,9 @@
         });
     }
 
-    function setupSearch() {
-        searchInput.addEventListener("input", applyFilters);
-    }
-
-    renderCards();
-    setupFilters();
+    renderButtons();
     setupSearch();
+    setupChips();
     applyFilters();
 </script>
 </body>
